@@ -247,6 +247,7 @@
   connection: local
   gather_facts: yes
   tags:
+    - install_prusaslicer
     - install_oshw_tools
     - install_prusaslicer
 
