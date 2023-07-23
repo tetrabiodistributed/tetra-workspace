@@ -379,6 +379,7 @@
   gather_facts: yes
   tags:
     - install_arduino_tools
+    - install_oshw_tools
 
   tasks:
   - name: Add kasm-user to dialout group (for flashing binaries with Arduino IDE) as per https://www.shellhacks.com/arduino-dev-ttyacm0-permission-denied/
@@ -626,7 +627,6 @@
     - install_freecad
     - install_oshw_tools
 
-
   vars:
     freecad_version: "1.0.0"
     freecad_appimage: "FreeCAD_{{ freecad_version }}-conda-Linux-x86_64-py311.AppImage"
@@ -681,6 +681,7 @@
     - install_python_tools
     - install_doctools
     - install_arduino_tools
+    - install_oshw_tools
 
   tasks:
   - name: Update OS to point python to python3
