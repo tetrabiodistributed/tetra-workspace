@@ -29,6 +29,9 @@ COPY ./terminalrc /home/kasm-default-profile/.config/xfce4/terminal/terminalrc
 # clean up install_files/
 RUN rm -rf $HOME/install_files/
 
+# show disk space info
+RUN df -h
+
 ######### End Customizations ###########
 
 RUN chown 1000:0 $HOME
