@@ -56,6 +56,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_AUTH_TOKEN }}
 
+      - name: Workaround to free up 5GB of space # see https://github.com/actions/runner-images/issues/709#issuecomment-612569242
+        run: sudo rm -rf "/usr/local/share/boost" && sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
       - name: Show disk usage before build
         run: df -h
 
