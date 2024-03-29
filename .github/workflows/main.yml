@@ -56,12 +56,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_AUTH_TOKEN }}
 
+      - name: Show disk usage before build
+        run: df -h
+
       - name: Build image
         uses: docker/build-push-action@v4.0.0
         with:
           tags: ${{ steps.docker_meta.outputs.tags }} 
           file: ./Dockerfile
-          
+
+      - name: Show disk usage after build
+        run: df -h
+
       - name: Push image
         uses: docker/build-push-action@v4.0.0
         with:
