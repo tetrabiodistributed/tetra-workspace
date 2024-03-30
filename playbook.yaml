@@ -313,25 +313,30 @@
     debug:
       msg: "{{ disk_usage.stdout }}"
 
-
 -
   # install NodeJs
   hosts: localhost
   connection: local
   gather_facts: yes
   tags:
-  - install_doctools
+    - install_node
+    - install_doctools
 
   vars:
-    node_version: "16.14.0"
+    node_version: "20.11.1"
     v_node_version: "v{{ node_version }}"
-    npm_version: "8.3.1"
-    npx_version: "8.3.1"
-    yarn_version: "1.22.11"
-    yo_version: "4.3.0"
-    generator_code_version: "1.6.7"
+    npm_version: "10.2.4"
+    npx_version: "10.2.4"
+    yarn_version: "3.5.0"
+    yo_version: "4.3.1"
+    generator_code_version: "1.7.5"
+    oclif_version: "4.3.6"
+    typescript_version: "5.1.3"
+    cli_njk_version: "1.0.0"
 
   tasks:   # Test Node JS Tools versions
+  - name: Install Yarn
+    shell: "corepack enable && corepack prepare yarn@{{ yarn_version }} --activate"
   - name: Get node version
     shell: node --version
     register: installed_node_version
@@ -344,9 +349,24 @@
   - name: Get yarn version
     shell: yarn --version
     register: installed_yarn_version
+  - name: Get oclif version
+    shell: oclif --version 2>/dev/null | sed 's/\ /\n/g' | grep oclif | sed 's/\///g' | sed 's/[[:alpha:]|(|[:space:]]//g'
+    register: installed_oclif_version
+  - name: Get TypeScript Compiler version
+    shell: tsc --version | sed 's/[[:alpha:]|(|[:space:]]//g'
+    register: installed_tsc_version
+  - name: Get cli-njk version
+    shell: njk --version
+    register: installed_cli_njk_version
   - name: Display node tool versions
     debug:
       msg: "Node = {{ installed_node_version.stdout }} | npm = {{ installed_npm_version.stdout }} | npx = {{ installed_npx_version.stdout }} | yarn = {{ installed_yarn_version.stdout }}"
+  - name: Display TypeScript Compiler version
+    debug:
+      msg: "tsc = {{ installed_tsc_version.stdout }}"
+  - name: Display cli-njk version
+    debug:
+      msg: "cli-njk = {{ installed_cli_njk_version.stdout }}"
   - name: Test node version
     fail:
       msg: "NodeJS Version Error: Expected {{ v_node_version }} | Found {{ installed_node_version.stdout }}"
@@ -363,6 +383,19 @@
     fail:
       msg: "Yarn Version Error: Expected {{ yarn_version }} | Found {{ installed_yarn_version.stdout }}"
     when: installed_yarn_version.stdout != yarn_version
+  - name: Test oclif version
+    fail:
+      msg: "oclif Version Error: Expected {{ oclif_version }} | Found {{ installed_oclif_version.stdout }}"
+    when: installed_oclif_version.stdout != oclif_version
+    when: installed_yarn_version.stdout != yarn_version
+  - name: Test TypeScript Compiler version
+    fail:
+      msg: "TypeScript Compiler Version Error: Expected {{ typescript_version }} | Found {{ installed_tsc_version.stdout }}"
+    when: installed_tsc_version.stdout != typescript_version
+  - name: Test cli-njk version
+    fail:
+      msg: "cli-njk Version Error: Expected {{ cli_njk_version }} | Found {{ installed_cli_njk_version.stdout }}"
+    when: installed_cli_njk_version.stdout != cli_njk_version
   - name: Get disk usage
     shell: df -h
     register: disk_usage
@@ -370,18 +403,21 @@
     debug:
       msg: "{{ disk_usage.stdout }}"
 
-
   roles:
   - role: grzegorznowak.nvm_node
-    nvm_install_script_version: "0.39.1"
-    nvm_node_version: "{{ node_version }}"
+    nvm_install_script_version: "0.39.3"
+    nvm_node_version: "{{ node_version }}"  
     nvm_install_globally:
-    - name: yarn
-      version: "{{ yarn_version }}"
     - name: yo
       version: "{{ yo_version }}"
     - name: generator-code
       version: "{{ generator_code_version }}"
+    - name: oclif
+      version: "{{ oclif_version }}"
+    - name: typescript
+      version: "{{ typescript_version }}"
+    - name: cli-njk
+      version: "{{ cli_njk_version }}"
 
 -
   # install Hugo (extended)
