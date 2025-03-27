@@ -27,7 +27,7 @@ This repo provides an Immutable-Infrastructure-as-Code (IIaC) workspace based on
         - [Arduino CLI](https://github.com/arduino/arduino-cli) 0.33.0
         - [Arduino Pico](https://github.com/earlephilhower/arduino-pico) 3.3.0
         - [Arduino ESP32](https://github.com/espressif/arduino-esp32) 2.0.9
-    - [KiCAD](https://www.kicad.org/) 7.0.10
+    - [KiCAD](https://www.kicad.org/) 9.0
     - [FreeCAD](https://www.freecad.org/) 0.21.2
     - [PrusaSlicer](https://github.com/prusa3d/PrusaSlicer) 2.7.1
 
