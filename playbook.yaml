@@ -63,7 +63,7 @@
 
   tasks:
   - name: Install build-essential
-    apt:
+    apk:
       name: build-essential
       update_cache: yes
 
@@ -101,7 +101,7 @@
 
   tasks:
   - name: Install libssl-dev
-    apt:
+    apk:
       name: libssl-dev
       update_cache: yes
 
@@ -120,13 +120,13 @@
 #
 #  tasks:
 #  - name: Install Ruby
-#    apt:
+#    apk:
 #      name: ruby-full
 #      update_cache: yes
 #  - name: Join parts of jabref tarball
 #    shell: cat /home/kasm-default-profile/install_files/jabref_5.6-1_amd64.deb.part* > /home/kasm-default-profile/install_files/jabref_5.6-1_amd64.deb
 #  - name: install jabref from deb
-#    apt:
+#    apk:
 #      deb: /home/kasm-default-profile/install_files/jabref_5.6-1_amd64.deb
 #      update_cache: yes
 #  - name: Run gem install for asciidoctor
@@ -141,7 +141,7 @@
 #  - name: install asciidoctor-revealjs as ruby gem
 #    shell: gem install asciidoctor-revealjs
 #  - name: install TeX Live
-#    apt:
+#    apk:
 #      name: "texlive-full={{ texlive_version }}"
 #      update_cache: yes
 #    # https://mikefarah.gitbook.io/yq/
@@ -154,7 +154,7 @@
 #      group: root
 #      mode: '0755'
 #  - name: Install pandoc-citeproc
-#    apt:
+#    apk:
 #      name: pandoc-citeproc
 #      update_cache: yes
 #  - name: Get pandoc version
@@ -204,14 +204,14 @@
 #
 #  tasks:
 #  - name: Install JDK
-#    apt:
+#    apk:
 #      name: "default-jdk={{ jdk_version }}"
 #      update_cache: yes
 #  - name: Get JDK Version
 #    shell: java --version | grep -m 1 -i openjdk
 #    register: installed_jdk_version
 #  - name: Install pre-reqs to build graphviz
-#    apt:
+#    apk:
 #      name: libcairo2-dev, libexpat-dev, libfreetype-dev, libgd-dev, fontconfig-config, libglib2.0-dev, libgtk2.0-dev, libpng-dev, libsdl-pango-dev, libgts-bin, libgtk-3-dev, libgtkglext1-dev, glade, freeglut3-dev, autoconf, automake, bison, flex, ghostscript, libtool, pkg-config, swig
 #      update_cache: yes
 #  - name: Expand source files archive
@@ -510,8 +510,8 @@
           datareporting.healthreport.uploadEnabled: false
 
   pre_tasks:
-  - name: Update apt packages
-    apt:
+  - name: Update apk packages
+    apk:
       update_cache: yes
 
   roles:
@@ -535,20 +535,20 @@
 
   tasks:
   - name: Add git PPA
-    shell: add-apt-repository ppa:git-core/ppa
+    shell: add-apk-repository ppa:git-core/ppa
   - name: Install git
-    apt:
+    apk:
       name: "git"
   - name: Install Git Bash Completion
-    apt:
+    apk:
       name: bash-completion
       update_cache: yes
   - name: Install Keychain
-    apt:
+    apk:
       name: "keychain={{ keychain_version_to_install }}"
       update_cache: yes
   - name: install ping
-    apt:
+    apk:
       name: iputils-ping
       update_cache: yes
   - name: Get git version
@@ -595,9 +595,9 @@
 
   tasks:
   - name: Add PPA repository for KiCad {{ kicad_version }}
-    shell: add-apt-repository ppa:kicad/kicad-{{ kicad_version }}-releases
+    shell: add-apk-repository ppa:kicad/kicad-{{ kicad_version }}-releases
   - name: install KiCad {{ kicad_version }} with Apt
-    apt:
+    apk:
       name: kicad
       update_cache: yes
       install_recommends: yes
@@ -627,14 +627,14 @@
     freecad_appimage: "FreeCAD_{{ freecad_version }}-conda-Linux-x86_64-py311.AppImage"
 
   tasks:
-  - name: Install kmod with apt
-    apt:
+  - name: Install kmod with apk
+    apk:
       name: kmod
       update_cache: yes
   - name: add universe for installing FUSE 2.x # as per https://github.com/AppImage/AppImageKit/wiki/FUSE#install-fuse
-    shell: add-apt-repository universe
-  - name: Install FUSE 2.x with apt # as per https://github.com/AppImage/AppImageKit/wiki/FUSE#install-fuse and https://docs.appimage.org/user-guide/troubleshooting/fuse.html#setting-up-fuse-2-x-alongside-of-fuse-3-x-on-recent-ubuntu-22-04-debian-and-their-derivatives
-    apt:
+    shell: add-apk-repository universe
+  - name: Install FUSE 2.x with apk # as per https://github.com/AppImage/AppImageKit/wiki/FUSE#install-fuse and https://docs.appimage.org/user-guide/troubleshooting/fuse.html#setting-up-fuse-2-x-alongside-of-fuse-3-x-on-recent-ubuntu-22-04-debian-and-their-derivatives
+    apk:
       name: libfuse2
       update_cache: yes
   - name: Download FreeCAD {{ freecad_version }} source tarball
@@ -679,11 +679,11 @@
 
   tasks:
   - name: Update OS to point python to python3
-    apt:
+    apk:
       name: python-is-python3
       update_cache: yes
   - name: Install pip for python3 with Apt
-    apt:
+    apk:
       name: python3-pip
       update_cache: yes
   - name: Install python packages with pip
@@ -706,7 +706,7 @@
   connection: local
   tasks:
   - name: Install Sudo
-    apt:
+    apk:
       name: sudo
       update_cache: yes
   - name: Preserve DONT_PROMPT_WSL_INSTALL in sudoers
