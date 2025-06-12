@@ -1,10 +1,10 @@
 # Tetra Workspace (Kasm Image)
 
-![Screenshot from 2022-11-28 17-33-05](https://user-images.githubusercontent.com/14095576/204409415-9cab4f7a-dfa1-456e-9fae-d512e7614429.png)
+![screenshot-of-tetra-workspace-with-tetra-wallpaper](./screenshot-of-tetra-workspace-with-tetra-wallpaper.png)
 
 ## Introduction
 
-This repo provides an Immutable-Infrastructure-as-Code (IIaC) workspace based on the [KASM Ubuntu Jammy Image](https://hub.docker.com/r/kasmweb/core-ubuntu-jammy) for Tetra Bio Distributed's medical/PPE open-source hardware (OSHW) development.  The workspace is configured with the following software:
+This repo provides an Immutable-Infrastructure-as-Code (IIaC) workspace based on the [KASM Ubuntu Noble Image](https://hub.docker.com/r/kasmweb/core-ubuntu-noble) for Tetra Bio Distributed's medical/PPE open-source hardware (OSHW) development.  The workspace is configured with the following software:
 
 - Utilities
     - [git](https://git-scm.com/) 2.42.0
