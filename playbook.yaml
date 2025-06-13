@@ -248,6 +248,7 @@
   gather_facts: yes
   tags:
     - install_prusaslicer
+    - install_prusaslicer_and_pcba_tools
     - install_oshw_tools
     - install_prusaslicer
 
@@ -381,6 +382,7 @@
   tags:
     - install_arduino_tools
     - install_pcba_tools
+    - install_prusaslicer_and_pcba_tools
     - install_oshw_tools
 
   tasks:
@@ -400,6 +402,7 @@
   tags:
     - install_arduino_tools
     - install_pcba_tools
+    - install_prusaslicer_and_pcba_tools
     - install_oshw_tools
 
   vars:
@@ -685,6 +688,7 @@
     - install_doctools
     - install_arduino_tools
     - install_pcba_tools
+    - install_prusaslicer_and_pcba_tools
     - install_oshw_tools
 
   tasks:
