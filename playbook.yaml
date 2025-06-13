@@ -380,6 +380,7 @@
   gather_facts: yes
   tags:
     - install_arduino_tools
+    - install_pcba_tools
     - install_oshw_tools
 
   tasks:
@@ -398,6 +399,7 @@
   gather_facts: yes
   tags:
     - install_arduino_tools
+    - install_pcba_tools
     - install_oshw_tools
 
   vars:
@@ -682,6 +684,7 @@
     - install_python_tools
     - install_doctools
     - install_arduino_tools
+    - install_pcba_tools
     - install_oshw_tools
 
   tasks:
