@@ -39,6 +39,13 @@
     lineinfile:
       path: "/etc/skel/.profile"
       line: 'export PS1="\[\033[00;32m\][\w]\$\[\033[00m\] "'
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
   # Handlers: the list of handlers that are executed as a notify 
   #           key from a task
@@ -66,6 +73,13 @@
     apt:
       name: build-essential
       update_cache: yes
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 #-
 #  # Install zlib
@@ -104,6 +118,13 @@
     apt:
       name: libssl-dev
       update_cache: yes
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 #-
 #  # Install doctools
@@ -285,6 +306,13 @@
     fail:
       msg: "prusa-slicer Error: Expected {{ prusaslicer_dir }} | Found {{ installed_prusaslicer_version.stdout }}"
     when: installed_prusaslicer_version.stdout != prusaslicer_dir
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 -
   # install NodeJs
@@ -335,6 +363,13 @@
     fail:
       msg: "Yarn Version Error: Expected {{ yarn_version }} | Found {{ installed_yarn_version.stdout }}"
     when: installed_yarn_version.stdout != yarn_version
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
   roles:
   - role: grzegorznowak.nvm_node
@@ -373,6 +408,13 @@
     shell: mv /home/kasm-default-profile/hugo_extended_{{ hugo_version }}_Linux-64bit/hugo /usr/local/bin
   - name: Delete Hugo temp directory
     shell: rm -rf /home/kasm-default-profile/hugo_extended_{{ hugo_version }}_Linux-64bit
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 -
   # add default user to dialout group
@@ -393,6 +435,13 @@
       groups: "dialout"
       state: present
       remove: yes
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 -
   # install Arduino 1.8.19
@@ -495,6 +544,13 @@
     fail:
       msg: "Arduino-ESP32 Version Error: Expected {{ arduino_esp32_version }} | Found {{ installed_arduino_esp32_version.stdout }}"
     when: installed_arduino_esp32_version.stdout != arduino_esp32_version
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 -
   # install firefox
@@ -592,6 +648,13 @@
     get_url:
       url: https://gist.githubusercontent.com/capsulecorplab/401ba2fe0857a328f2a626adbf078cc6/raw/b89a6234f0d620ff60bcfe37f95de197b8772377/.gitconfig
       dest: /home/kasm-default-profile/
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 -
   # install KiCad
@@ -619,10 +682,17 @@
   - name: Display KiCad versions
     debug:
       msg: "kicad = {{ installed_kicad_version.stdout }}"
-#  - name: Test KiCad version
-#    fail:
-#      msg: "KiCad Version Error: Expected {{ kicad_version }} | Found {{ installed_kicad_version.stdout }}"
-#    when: installed_kicad_version.stdout != kicad_version
+  - name: Test KiCad version
+    fail:
+      msg: "KiCad Version Error: Expected {{ kicad_version }} | Found {{ installed_kicad_version.stdout }}"
+    when: installed_kicad_version.stdout != kicad_version
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 -
   # install FreeCAD
@@ -677,6 +747,13 @@
     shell: ln -srv /opt/FreeCAD/{{ freecad_appimage }} /usr/local/bin/freecad
   - name: Configure FreeCAD desktop shortcut
     shell: echo "[Desktop Entry]\nName=FreeCAD\nGenericName=FreeCAD\nExec=/usr/local/bin/freecad\nIcon=/opt/FreeCAD/freecad-icon-16.png\nTerminal=false\nType=Application\nStartupNotify=false\nCategories=Application;Development;" > /usr/share/applications/freecad.desktop
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 -
   # install Python packages with pip
@@ -710,6 +787,13 @@
         - jinja2==3.1.2
         - linkml==1.4.1
         - jinja2-cli==0.8.2
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 #  roles:
 #    - role: geerlingguy.pip
@@ -728,6 +812,13 @@
       path: "/etc/sudoers"
       line: "Defaults        env_keep += \"DONT_PROMPT_WSL_INSTALL\""
     when: wsl2_environment
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 -
 # add dev user to give vs code somewhere to install extensions
@@ -738,6 +829,13 @@
     user:
       name: dev
       uid: 1002
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 -
   # install the remainder of the tools
@@ -780,6 +878,13 @@
       name: dev
       state: absent
       remove: yes 
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 # Three dots indicate the end of a YAML document
 ...
