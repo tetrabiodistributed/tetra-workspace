@@ -702,14 +702,15 @@
 
   vars:
     kicad_version: "9.0"
-    kicad_version_to_install: "{{ kicad_version }}~ubuntu22.04.1"
+    kicad_semver: "{{ kicad_version }}.2"
+    kicad_version_to_install: "{{ kicad_semver }}-0~ubuntu24.04.1"
 
   tasks:
   - name: Add PPA repository for KiCad {{ kicad_version }}
     shell: add-apt-repository ppa:kicad/kicad-{{ kicad_version }}-releases
-  - name: install KiCad {{ kicad_version }} with Apt
+  - name: install KiCad {{ kicad_semver }} with Apt
     apt:
-      name: kicad
+      name: kicad={{ kicad_version_to_install }}
       update_cache: yes
       install_recommends: yes
   - name: Get KiCad version
@@ -720,8 +721,8 @@
       msg: "kicad = {{ installed_kicad_version.stdout }}"
   - name: Test KiCad version
     fail:
-      msg: "KiCad Version Error: Expected {{ kicad_version }} | Found {{ installed_kicad_version.stdout }}"
-    when: installed_kicad_version.stdout != kicad_version
+      msg: "KiCad Version Error: Expected {{ kicad_semver }} | Found {{ installed_kicad_version.stdout }}"
+    when: installed_kicad_version.stdout != kicad_semver
   - name: Get disk usage
     shell: df -h
     register: disk_usage
