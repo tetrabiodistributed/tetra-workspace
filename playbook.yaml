@@ -816,6 +816,7 @@
       update_cache: yes
   - name: Install python packages with pip
     pip:
+      break_system_packages: true
       name:
         - pyserial
         - jupyterlab
