@@ -17,7 +17,7 @@ RUN apt update && apt -y install software-properties-common && add-apt-repositor
 
 # run Ansible commands
 COPY ./requirements.yaml ./playbook.yaml ./
-RUN ansible-galaxy install -r requirements.yaml && ansible-playbook -i,localhost playbook.yaml --tags "install_oshw_tools" && rm -f ./*.yaml
+RUN ansible-galaxy install -r requirements.yaml && ansible-playbook -i,localhost playbook.yaml --tags "all" && rm -f ./*.yaml
 
 # Custom Desktop Background - replace bg_custom.png on disk with your own background image
 COPY ./bg_custom.png /usr/share/backgrounds/bg_default.png
@@ -28,6 +28,9 @@ COPY ./terminalrc /home/kasm-default-profile/.config/xfce4/terminal/terminalrc
 
 # clean up install_files/
 RUN rm -rf $HOME/install_files/
+
+# show disk space info
+RUN df -h
 
 ######### End Customizations ###########
 

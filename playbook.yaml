@@ -39,6 +39,13 @@
     lineinfile:
       path: "/etc/skel/.profile"
       line: 'export PS1="\[\033[00;32m\][\w]\$\[\033[00m\] "'
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
   # Handlers: the list of handlers that are executed as a notify 
   #           key from a task
@@ -66,6 +73,13 @@
     apt:
       name: build-essential
       update_cache: yes
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 #-
 #  # Install zlib
@@ -104,6 +118,13 @@
     apt:
       name: libssl-dev
       update_cache: yes
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 #-
 #  # Install doctools
@@ -247,6 +268,8 @@
   connection: local
   gather_facts: yes
   tags:
+    - install_prusaslicer
+    - install_prusaslicer_and_pcba_tools
     - install_oshw_tools
     - install_prusaslicer
 
@@ -283,6 +306,12 @@
     fail:
       msg: "prusa-slicer Error: Expected {{ prusaslicer_dir }} | Found {{ installed_prusaslicer_version.stdout }}"
     when: installed_prusaslicer_version.stdout != prusaslicer_dir
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
 
 -
   # install NodeJs
@@ -290,18 +319,24 @@
   connection: local
   gather_facts: yes
   tags:
-  - install_doctools
+    - install_node
+    - install_doctools
 
   vars:
-    node_version: "16.14.0"
+    node_version: "20.11.1"
     v_node_version: "v{{ node_version }}"
-    npm_version: "8.3.1"
-    npx_version: "8.3.1"
-    yarn_version: "1.22.11"
-    yo_version: "4.3.0"
-    generator_code_version: "1.6.7"
+    npm_version: "10.2.4"
+    npx_version: "10.2.4"
+    yarn_version: "3.5.0"
+    yo_version: "4.3.1"
+    generator_code_version: "1.7.5"
+    oclif_version: "4.3.6"
+    typescript_version: "5.1.3"
+    cli_njk_version: "1.0.0"
 
   tasks:   # Test Node JS Tools versions
+  - name: Install Yarn
+    shell: "corepack enable && corepack prepare yarn@{{ yarn_version }} --activate"
   - name: Get node version
     shell: node --version
     register: installed_node_version
@@ -314,9 +349,24 @@
   - name: Get yarn version
     shell: yarn --version
     register: installed_yarn_version
+  - name: Get oclif version
+    shell: oclif --version 2>/dev/null | sed 's/\ /\n/g' | grep oclif | sed 's/\///g' | sed 's/[[:alpha:]|(|[:space:]]//g'
+    register: installed_oclif_version
+  - name: Get TypeScript Compiler version
+    shell: tsc --version | sed 's/[[:alpha:]|(|[:space:]]//g'
+    register: installed_tsc_version
+  - name: Get cli-njk version
+    shell: njk --version
+    register: installed_cli_njk_version
   - name: Display node tool versions
     debug:
       msg: "Node = {{ installed_node_version.stdout }} | npm = {{ installed_npm_version.stdout }} | npx = {{ installed_npx_version.stdout }} | yarn = {{ installed_yarn_version.stdout }}"
+  - name: Display TypeScript Compiler version
+    debug:
+      msg: "tsc = {{ installed_tsc_version.stdout }}"
+  - name: Display cli-njk version
+    debug:
+      msg: "cli-njk = {{ installed_cli_njk_version.stdout }}"
   - name: Test node version
     fail:
       msg: "NodeJS Version Error: Expected {{ v_node_version }} | Found {{ installed_node_version.stdout }}"
@@ -333,18 +383,41 @@
     fail:
       msg: "Yarn Version Error: Expected {{ yarn_version }} | Found {{ installed_yarn_version.stdout }}"
     when: installed_yarn_version.stdout != yarn_version
+  - name: Test oclif version
+    fail:
+      msg: "oclif Version Error: Expected {{ oclif_version }} | Found {{ installed_oclif_version.stdout }}"
+    when: installed_oclif_version.stdout != oclif_version
+    when: installed_yarn_version.stdout != yarn_version
+  - name: Test TypeScript Compiler version
+    fail:
+      msg: "TypeScript Compiler Version Error: Expected {{ typescript_version }} | Found {{ installed_tsc_version.stdout }}"
+    when: installed_tsc_version.stdout != typescript_version
+  - name: Test cli-njk version
+    fail:
+      msg: "cli-njk Version Error: Expected {{ cli_njk_version }} | Found {{ installed_cli_njk_version.stdout }}"
+    when: installed_cli_njk_version.stdout != cli_njk_version
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
 
   roles:
   - role: grzegorznowak.nvm_node
-    nvm_install_script_version: "0.39.1"
-    nvm_node_version: "{{ node_version }}"
+    nvm_install_script_version: "0.39.3"
+    nvm_node_version: "{{ node_version }}"  
     nvm_install_globally:
-    - name: yarn
-      version: "{{ yarn_version }}"
     - name: yo
       version: "{{ yo_version }}"
     - name: generator-code
       version: "{{ generator_code_version }}"
+    - name: oclif
+      version: "{{ oclif_version }}"
+    - name: typescript
+      version: "{{ typescript_version }}"
+    - name: cli-njk
+      version: "{{ cli_njk_version }}"
 
 -
   # install Hugo (extended)
@@ -371,6 +444,13 @@
     shell: mv /home/kasm-default-profile/hugo_extended_{{ hugo_version }}_Linux-64bit/hugo /usr/local/bin
   - name: Delete Hugo temp directory
     shell: rm -rf /home/kasm-default-profile/hugo_extended_{{ hugo_version }}_Linux-64bit
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 -
   # add default user to dialout group
@@ -379,6 +459,9 @@
   gather_facts: yes
   tags:
     - install_arduino_tools
+    - install_pcba_tools
+    - install_prusaslicer_and_pcba_tools
+    - install_oshw_tools
 
   tasks:
   - name: Add kasm-user to dialout group (for flashing binaries with Arduino IDE) as per https://www.shellhacks.com/arduino-dev-ttyacm0-permission-denied/
@@ -388,6 +471,13 @@
       groups: "dialout"
       state: present
       remove: yes
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 -
   # install Arduino 1.8.19
@@ -396,6 +486,8 @@
   gather_facts: yes
   tags:
     - install_arduino_tools
+    - install_pcba_tools
+    - install_prusaslicer_and_pcba_tools
     - install_oshw_tools
 
   vars:
@@ -488,6 +580,13 @@
     fail:
       msg: "Arduino-ESP32 Version Error: Expected {{ arduino_esp32_version }} | Found {{ installed_arduino_esp32_version.stdout }}"
     when: installed_arduino_esp32_version.stdout != arduino_esp32_version
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 -
   # install firefox
@@ -585,6 +684,13 @@
     get_url:
       url: https://gist.githubusercontent.com/capsulecorplab/401ba2fe0857a328f2a626adbf078cc6/raw/b89a6234f0d620ff60bcfe37f95de197b8772377/.gitconfig
       dest: /home/kasm-default-profile/
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 -
   # install KiCad
@@ -596,14 +702,15 @@
 
   vars:
     kicad_version: "9.0"
-    kicad_version_to_install: "{{ kicad_version }}~ubuntu22.04.1"
+    kicad_semver: "{{ kicad_version }}.2"
+    kicad_version_to_install: "{{ kicad_semver }}-0~ubuntu24.04.1"
 
   tasks:
   - name: Add PPA repository for KiCad {{ kicad_version }}
     shell: add-apt-repository ppa:kicad/kicad-{{ kicad_version }}-releases
-  - name: install KiCad {{ kicad_version }} with Apt
+  - name: install KiCad {{ kicad_semver }} with Apt
     apt:
-      name: kicad
+      name: kicad={{ kicad_version_to_install }}
       update_cache: yes
       install_recommends: yes
   - name: Get KiCad version
@@ -612,10 +719,17 @@
   - name: Display KiCad versions
     debug:
       msg: "kicad = {{ installed_kicad_version.stdout }}"
-#  - name: Test KiCad version
-#    fail:
-#      msg: "KiCad Version Error: Expected {{ kicad_version }} | Found {{ installed_kicad_version.stdout }}"
-#    when: installed_kicad_version.stdout != kicad_version
+  - name: Test KiCad version
+    fail:
+      msg: "KiCad Version Error: Expected {{ kicad_semver }} | Found {{ installed_kicad_version.stdout }}"
+    when: installed_kicad_version.stdout != kicad_semver
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 -
   # install FreeCAD
@@ -625,7 +739,6 @@
   tags:
     - install_freecad
     - install_oshw_tools
-
 
   vars:
     freecad_version: "1.0.0"
@@ -671,6 +784,13 @@
     shell: ln -srv /opt/FreeCAD/{{ freecad_appimage }} /usr/local/bin/freecad
   - name: Configure FreeCAD desktop shortcut
     shell: echo "[Desktop Entry]\nName=FreeCAD\nGenericName=FreeCAD\nExec=/usr/local/bin/freecad\nIcon=/opt/FreeCAD/freecad-icon-16.png\nTerminal=false\nType=Application\nStartupNotify=false\nCategories=Application;Development;" > /usr/share/applications/freecad.desktop
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 -
   # install Python packages with pip
@@ -681,6 +801,9 @@
     - install_python_tools
     - install_doctools
     - install_arduino_tools
+    - install_pcba_tools
+    - install_prusaslicer_and_pcba_tools
+    - install_oshw_tools
 
   tasks:
   - name: Update OS to point python to python3
@@ -693,14 +816,17 @@
       update_cache: yes
   - name: Install python packages with pip
     pip:
+      break_system_packages: true
       name:
         - pyserial
-        - jupyterlab
-        - notebook
         - pint
-        - jinja2==3.1.2
-        - linkml==1.4.1
-        - jinja2-cli==0.8.2
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 #  roles:
 #    - role: geerlingguy.pip
@@ -719,6 +845,13 @@
       path: "/etc/sudoers"
       line: "Defaults        env_keep += \"DONT_PROMPT_WSL_INSTALL\""
     when: wsl2_environment
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 -
 # add dev user to give vs code somewhere to install extensions
@@ -729,6 +862,13 @@
     user:
       name: dev
       uid: 1002
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 -
   # install the remainder of the tools
@@ -771,6 +911,13 @@
       name: dev
       state: absent
       remove: yes 
+  - name: Get disk usage
+    shell: df -h
+    register: disk_usage
+  - name: Display disk usage
+    debug:
+      msg: "{{ disk_usage.stdout }}"
+
 
 # Three dots indicate the end of a YAML document
 ...
