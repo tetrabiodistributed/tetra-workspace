@@ -819,12 +819,7 @@
       break_system_packages: true
       name:
         - pyserial
-        - jupyterlab
-        - notebook
         - pint
-        - jinja2==3.1.2
-        - linkml==1.4.1
-        - jinja2-cli==0.8.2
   - name: Get disk usage
     shell: df -h
     register: disk_usage
