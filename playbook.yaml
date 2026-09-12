@@ -701,9 +701,9 @@
     - install_oshw_tools
 
   vars:
-    kicad_version: "9.0"
-    kicad_semver: "{{ kicad_version }}.2"
-    kicad_version_to_install: "{{ kicad_semver }}-0~ubuntu24.04.1"
+    kicad_version: "10.0"
+    kicad_semver: "{{ kicad_version }}.6"
+    kicad_version_to_install: "{{ kicad_semver }}~ubuntu24.04.1"
 
   tasks:
   - name: Add PPA repository for KiCad {{ kicad_version }}
