@@ -3,7 +3,7 @@ version: "3.7"
 services:
   kasm:
     build: .
-    image: ghcr.io/tetrabiodistributed/tetra-workspace-image:v1.1.0
+    image: ghcr.io/tetrabiodistributed/tetra-workspace-image:v1.1.1
     ports:
       - "6901:6901"
     environment:
